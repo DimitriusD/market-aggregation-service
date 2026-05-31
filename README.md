@@ -104,7 +104,7 @@ curl http://localhost:8080/api/v1/items
 ## Project Structure
 
 ```
-hexagonal-service-template/
+market-aggregation-service/
 ├── build.gradle.kts                 # Root build: Java 21, JUnit Platform
 ├── settings.gradle.kts              # Module declarations
 ├── gradle/libs.versions.toml        # Centralized dependency versions

@@ -1,0 +1,16 @@
+package com.trading.marketaggregation.application.domain.model;
+
+public record Metadata(int schemaVersion,
+                       String eventType,
+                       String exchange,
+                       String marketType,
+                       String base,
+                       String quote,
+                       String symbol,
+                       String instrumentId,
+                       String eventId,
+                       String sourceStream,
+                       long exchangeTs,
+                       long receivedTs,
+                       long processedTs) {
+}

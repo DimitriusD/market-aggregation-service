@@ -1,14 +1,4 @@
 services:
-  db:
-    image: postgres:17.4
-    container_name: ${APP_NAME:-app}-postgres
-    environment:
-      POSTGRES_DB: ${APP_DB_NAME:-appdb}
-      POSTGRES_USER: ${APP_DB_USERNAME:-appuser}
-      POSTGRES_PASSWORD: ${APP_DB_PASSWORD:-apppass}
-    ports:
-      - "5432:5432"
-
   kafka:
     image: confluentinc/cp-kafka:latest
     container_name: ${APP_NAME:-app}-kafka
@@ -31,6 +21,18 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    container_name: ${APP_NAME:-app}-schema-registry
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:29092
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    depends_on:
+      - kafka
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: ${APP_NAME:-app}-kafka-ui
@@ -40,5 +42,7 @@ services:
       DYNAMIC_CONFIG_ENABLED: "true"
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
     depends_on:
       - kafka
+      - schema-registry
